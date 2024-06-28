@@ -84,7 +84,7 @@ class _HomeState extends State<Home> {
                     if (_c.status.isLoading) {
                       return const Center(child: CircularProgressIndicator());
                     } else {
-                      HomeModel data = _c.data!;
+                      HomeModel data = _c.data ?? HomeModel();
                       return Stack(
                         children: [
                           Positioned(
@@ -226,13 +226,9 @@ class _HomeState extends State<Home> {
                                     )
                                   ],
                                 ),
-                                SectionHome(
-                                    data: data.trendingMovies!,
-                                    title: 'Trending Movie'),
+                                SectionHome(data: [], title: 'Trending Movie'),
                                 const SectionShop(),
-                                SectionHome(
-                                    data: data.trendingTv!,
-                                    title: 'Trending Series'),
+                                SectionHome(data: [], title: 'Trending Series'),
                               ],
                             ),
                           ),
