@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:netflix/constant.dart';
 import 'package:netflix/controllers/home_controller.dart';
 import 'package:netflix/controllers/search_controller.dart' as base;
-import 'package:netflix/models/tmdb_model.dart';
+import 'package:netflix/models/item_model.dart';
 import 'package:netflix/views/widget/card_movie.dart';
 import 'package:netflix/views/widget/section_newest.dart';
 import 'package:remixicon/remixicon.dart';
@@ -76,18 +76,25 @@ class _SearchState extends State<Search> {
                                   autofocus: true,
                                   onChanged: (value) {
                                     setState(() {
-                                      if (_debounce?.isActive ?? false) _debounce?.cancel();
-                                      _debounce = Timer(const Duration(milliseconds: 500), () {
-                                        _c.getSearch({'title': _text.text, 'page': 1});
+                                      if (_debounce?.isActive ?? false)
+                                        _debounce?.cancel();
+                                      _debounce = Timer(
+                                          const Duration(milliseconds: 500),
+                                          () {
+                                        _c.getSearch(
+                                            {'title': _text.text, 'page': 1});
                                       });
                                     });
                                   },
                                   decoration: InputDecoration(
                                     isDense: true,
                                     contentPadding: const EdgeInsets.all(0),
-                                    border: const OutlineInputBorder(borderSide: BorderSide.none),
-                                    enabledBorder: const OutlineInputBorder(borderSide: BorderSide.none),
-                                    disabledBorder: const OutlineInputBorder(borderSide: BorderSide.none),
+                                    border: const OutlineInputBorder(
+                                        borderSide: BorderSide.none),
+                                    enabledBorder: const OutlineInputBorder(
+                                        borderSide: BorderSide.none),
+                                    disabledBorder: const OutlineInputBorder(
+                                        borderSide: BorderSide.none),
                                     prefixIcon: const Icon(Remix.search_2_line),
                                     filled: true,
                                     fillColor: Colors.white.withOpacity(0.1),
@@ -95,7 +102,8 @@ class _SearchState extends State<Search> {
                                       onTap: () {
                                         _text.clear();
                                       },
-                                      child: const Icon(Remix.close_circle_fill),
+                                      child:
+                                          const Icon(Remix.close_circle_fill),
                                     ),
                                   ),
                                 ),
@@ -133,11 +141,14 @@ class _SearchState extends State<Search> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(Remix.search_2_line, size: 14, color: Colors.white.withOpacity(0.3)),
+                            Icon(Remix.search_2_line,
+                                size: 14, color: Colors.white.withOpacity(0.3)),
                             const SizedBox(
                               width: 5,
                             ),
-                            Text('Search', style: TextStyle(color: Colors.white.withOpacity(0.3))),
+                            Text('Search',
+                                style: TextStyle(
+                                    color: Colors.white.withOpacity(0.3))),
                           ],
                         ),
                       ),
@@ -157,12 +168,17 @@ class _SearchState extends State<Search> {
                     child: Stack(
                       children: [
                         if (_hc.status.isLoading) ...[
-                          Center(child: CircularProgressIndicator(color: primaryColor))
+                          Center(
+                              child: CircularProgressIndicator(
+                                  color: primaryColor))
                         ] else ...[
                           ListView(
                             padding: const EdgeInsets.all(15),
                             children: [
-                              SectionNewest(data: [..._hc.data?.trendingMovies ?? [], ..._hc.data?.trendingTv ?? []]),
+                              SectionNewest(data: [
+                                ..._hc.latestMovies,
+                                ..._hc.latestShows
+                              ]),
                             ],
                           )
                         ],
@@ -188,11 +204,13 @@ class _SearchState extends State<Search> {
                             crossAxisSpacing: 0,
                             childAspectRatio: 9 / 13,
                             children: List.generate(_c.search.length, (index) {
-                              Tmdb movie = _c.search[index].tmdb!;
+                              ItemModel movie = _c.search[index];
                               return CardMovie(movie: movie, noMargin: true);
                             }),
                           ),
-                          if (_c.status.isLoading && page != 1) LinearProgressIndicator(backgroundColor: bgColor, minHeight: 1)
+                          if (_c.status.isLoading && page != 1)
+                            LinearProgressIndicator(
+                                backgroundColor: bgColor, minHeight: 1)
                         ],
                       ),
                     ),

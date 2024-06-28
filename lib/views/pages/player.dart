@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/route_manager.dart';
 import 'package:netflix/constant.dart';
-import 'package:netflix/models/tmdb_model.dart';
+import 'package:netflix/models/item_model.dart';
 
 class Player extends StatefulWidget {
   const Player({super.key});
@@ -45,7 +45,8 @@ class _PlayerState extends State<Player> {
       BetterPlayerDataSourceType.network,
       argument.url,
       headers: {'range': 'bytes=0-'},
-      videoFormat: argument.url.contains('m3u8') ? BetterPlayerVideoFormat.hls : null,
+      videoFormat:
+          argument.url.contains('m3u8') ? BetterPlayerVideoFormat.hls : null,
       cacheConfiguration: const BetterPlayerCacheConfiguration(useCache: true),
       subtitles: [
         BetterPlayerSubtitlesSource(
@@ -82,6 +83,7 @@ class _PlayerState extends State<Player> {
 class PlayerArgument {
   final String url;
   final String? subtitle;
-  final Tmdb movie;
-  PlayerArgument({required this.url, required this.subtitle, required this.movie});
+  final ItemModel movie;
+  PlayerArgument(
+      {required this.url, required this.subtitle, required this.movie});
 }

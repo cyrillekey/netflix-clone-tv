@@ -3,13 +3,11 @@ import "package:flutter/material.dart";
 import 'package:get/get.dart';
 import 'package:netflix/constant.dart';
 import 'package:netflix/controllers/home_controller.dart';
-import 'package:netflix/models/home_model.dart';
 import 'package:netflix/models/item_model.dart';
-import 'package:netflix/models/tmdb_model.dart';
+
 import 'package:netflix/views/widget/card_movie.dart';
 import 'package:netflix/views/widget/genre_separator.dart';
 import 'package:netflix/views/widget/section_home.dart';
-import 'package:netflix/views/widget/section_shop.dart';
 import 'package:remixicon/remixicon.dart';
 
 class Home extends StatefulWidget {
@@ -75,6 +73,50 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
+      appBar: AppBar(
+          elevation: 0,
+          backgroundColor: Colors.black,
+          leading: Image.asset(
+            'assets/images/netflix_logo.png',
+            width: 15,
+            height: 30,
+          ),
+          // title: SizedBox(
+          //   height: 60 - (40 * _scrollOffset / 140),
+          //   child: Padding(
+          //     padding: const EdgeInsets.only(
+          //         left: 20, right: 20, bottom: 20, top: 20),
+          //     child: Row(
+          //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //       children: [
+          //         const Text("TV Shows"),
+          //         const Text("Movies"),
+          //         InkWell(
+          //           onTap: () => widget.openGenre(),
+          //           child: Row(
+          //             children: [
+          //               Text(_c.category ?? 'Categories'),
+          //               const SizedBox(width: 5),
+          //               Opacity(
+          //                   opacity: 1 - (_scrollOffset / 140),
+          //                   child: const Icon(Remix.arrow_down_s_line)),
+          //             ],
+          //           ),
+          //         ),
+          //       ],
+          //     ),
+          //   ),
+          // ),
+          actions: [
+            Row(
+              children: [
+                Image.asset(
+                  'assets/images/user.png',
+                  width: 25,
+                ),
+              ],
+            ),
+          ]),
       body: Obx(
         () => (_c.category == null && _c.status.isLoading && _c.movies.isEmpty)
             ? const Center(child: CircularProgressIndicator())
@@ -84,7 +126,6 @@ class _HomeState extends State<Home> {
                     if (_c.status.isLoading) {
                       return const Center(child: CircularProgressIndicator());
                     } else {
-                      HomeModel data = _c.data ?? HomeModel();
                       return Stack(
                         children: [
                           Positioned(
@@ -96,213 +137,21 @@ class _HomeState extends State<Home> {
                               controller: _scrollController,
                               padding: const EdgeInsets.all(0),
                               children: [
-                                Stack(
-                                  children: [
-                                    CachedNetworkImage(
-                                      imageUrl:
-                                          'https://image.tmdb.org/t/p/w500/${data.banner?.tmdb?.posterPath}',
-                                      placeholder: (_, url) => AspectRatio(
-                                        aspectRatio: 0.67,
-                                        child: Container(
-                                          width: double.infinity,
-                                          color: bgColor,
-                                        ),
-                                      ),
-                                      width: double.infinity,
-                                    ),
-                                    Positioned(
-                                      left: 0,
-                                      right: 0,
-                                      bottom: 0,
-                                      child: Container(
-                                        padding: const EdgeInsets.all(20),
-                                        width: double.infinity,
-                                        decoration: const BoxDecoration(
-                                            gradient: LinearGradient(
-                                                begin: Alignment.bottomCenter,
-                                                end: Alignment.topCenter,
-                                                colors: [
-                                              Colors.black,
-                                              Colors.transparent
-                                            ])),
-                                        child: SizedBox(
-                                          width: double.infinity,
-                                          child: Wrap(
-                                            direction: Axis.horizontal,
-                                            alignment: WrapAlignment.center,
-                                            children: [
-                                              Column(
-                                                children: [
-                                                  Text(
-                                                    data.banner?.tmdb?.name ??
-                                                        '-',
-                                                    style: const TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.w600,
-                                                        fontSize: 32),
-                                                    textAlign: TextAlign.center,
-                                                  ),
-                                                  const SizedBox(height: 15),
-                                                  Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    children: List.generate(
-                                                      data.banner?.tmdb?.genres
-                                                              ?.length ??
-                                                          0,
-                                                      (index) => Row(
-                                                        children: [
-                                                          Text(data
-                                                                  .banner
-                                                                  ?.tmdb
-                                                                  ?.genres?[
-                                                                      index]
-                                                                  .name ??
-                                                              '-'),
-                                                          if (index !=
-                                                              data
-                                                                      .banner!
-                                                                      .tmdb!
-                                                                      .genres!
-                                                                      .length -
-                                                                  1)
-                                                            const GenreSeparator(),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  const SizedBox(height: 10),
-                                                  Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      Column(
-                                                        children: [
-                                                          GestureDetector(
-                                                              onTap: () {},
-                                                              child: const Icon(
-                                                                  Icons
-                                                                      .add_outlined)),
-                                                          const Text("My List")
-                                                        ],
-                                                      ),
-                                                      const SizedBox(width: 25),
-                                                      ElevatedButton(
-                                                        onPressed: () =>
-                                                            Get.toNamed(
-                                                                '/detail',
-                                                                arguments: data
-                                                                    .banner),
-                                                        style: primaryButton,
-                                                        child: const Row(
-                                                          children: [
-                                                            Icon(Icons
-                                                                .play_arrow),
-                                                            Text("Play"),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      const SizedBox(width: 25),
-                                                      Column(
-                                                        children: [
-                                                          GestureDetector(
-                                                            onTap: () {},
-                                                            child: const Icon(Icons
-                                                                .info_outline),
-                                                          ),
-                                                          const Text("Info"),
-                                                        ],
-                                                      )
-                                                    ],
-                                                  )
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                                SectionHome(data: [], title: 'Trending Movie'),
-                                const SectionShop(),
-                                SectionHome(data: [], title: 'Trending Series'),
+                                SectionHome(
+                                    data: _c.trending, title: 'Trending'),
+                                SectionHome(
+                                    data: _c.latestMovies,
+                                    title: 'Latest Movie'),
+                                SectionHome(
+                                    data: _c.latestShows,
+                                    title: 'Latest Series'),
+                                SectionHome(
+                                    data: _c.popularAnime,
+                                    title: 'Popular Anime'),
+                                SectionHome(
+                                    data: _c.latestAnime,
+                                    title: 'Anime Movies'),
                               ],
-                            ),
-                          ),
-                          Positioned(
-                            top: 0,
-                            left: 0,
-                            right: 0,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                  gradient: LinearGradient(
-                                      begin: Alignment.topCenter,
-                                      end: Alignment.bottomCenter,
-                                      colors: [
-                                    Colors.black,
-                                    Colors.black
-                                        .withOpacity(_scrollOffset / 145)
-                                  ])),
-                              width: double.infinity,
-                              padding: const EdgeInsets.only(
-                                  left: 15, top: 40, bottom: 0, right: 25),
-                              child: Column(
-                                children: [
-                                  Row(
-                                    children: [
-                                      Image.asset(
-                                        'assets/images/netflix_logo.png',
-                                        width: 15,
-                                      ),
-                                      const Spacer(),
-                                      const Icon(Icons.cast),
-                                      const SizedBox(
-                                        width: 15,
-                                      ),
-                                      Image.asset(
-                                        'assets/images/user.png',
-                                        width: 25,
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: 60 - (40 * _scrollOffset / 140),
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 20,
-                                          right: 20,
-                                          bottom: 20,
-                                          top: 20),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          const Text("TV Shows"),
-                                          const Text("Movies"),
-                                          InkWell(
-                                            onTap: () => widget.openGenre(),
-                                            child: Row(
-                                              children: [
-                                                Text(_c.category ??
-                                                    'Categories'),
-                                                const SizedBox(width: 5),
-                                                Opacity(
-                                                    opacity: 1 -
-                                                        (_scrollOffset / 140),
-                                                    child: const Icon(Remix
-                                                        .arrow_down_s_line)),
-                                              ],
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              ),
                             ),
                           ),
                         ],
@@ -324,8 +173,7 @@ class _HomeState extends State<Home> {
                               Stack(
                                 children: [
                                   CachedNetworkImage(
-                                    imageUrl:
-                                        'https://image.tmdb.org/t/p/w500/${data.first.tmdb!.posterPath}',
+                                    imageUrl: "${data.first.cover}",
                                     placeholder: (_, url) => AspectRatio(
                                       aspectRatio: 0.67,
                                       child: Container(
@@ -359,7 +207,7 @@ class _HomeState extends State<Home> {
                                             Column(
                                               children: [
                                                 Text(
-                                                  data.first.tmdb!.name ?? '--',
+                                                  data.first.title ?? '--',
                                                   style: const TextStyle(
                                                       fontWeight:
                                                           FontWeight.w600,
@@ -371,21 +219,14 @@ class _HomeState extends State<Home> {
                                                   mainAxisAlignment:
                                                       MainAxisAlignment.center,
                                                   children: List.generate(
-                                                    data.first.tmdb!.genres
-                                                            ?.length ??
+                                                    data.first.genres?.length ??
                                                         0,
                                                     (index) => Row(
                                                       children: [
-                                                        Text(data
-                                                            .first
-                                                            .tmdb!
-                                                            .genres![index]
-                                                            .name!),
+                                                        Text(data.first
+                                                            .genres![index]),
                                                         if (index !=
-                                                            data
-                                                                    .first
-                                                                    .tmdb!
-                                                                    .genres!
+                                                            data.first.genres!
                                                                     .length -
                                                                 1)
                                                           const GenreSeparator(),
@@ -471,9 +312,9 @@ class _HomeState extends State<Home> {
                                         childAspectRatio: 9 / 13,
                                         children: List.generate(display.length,
                                             (index) {
-                                          Tmdb movie = display[index].tmdb!;
                                           return CardMovie(
-                                              movie: movie, noMargin: true);
+                                              movie: display[index],
+                                              noMargin: true);
                                         }),
                                       );
                                     })

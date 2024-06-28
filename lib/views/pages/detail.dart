@@ -8,9 +8,8 @@ import 'package:netflix/constant.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:netflix/controllers/detail_controller.dart';
 import 'package:netflix/controllers/services/api_services.dart';
-import 'package:netflix/models/source_model.dart';
-import 'package:netflix/models/tmdb_model.dart';
-import 'package:netflix/views/pages/player.dart';
+import 'package:netflix/models/item_model.dart';
+
 import 'package:netflix/views/widget/episode_section.dart';
 import 'package:netflix/views/widget/media_section.dart';
 import 'package:netflix/views/widget/movie_detail_header.dart';
@@ -28,7 +27,7 @@ class Detail extends StatefulWidget {
 
 class _DetailState extends State<Detail> {
   final DetailController _c = Get.put(DetailController());
-  final Tmdb data = Get.arguments;
+  final ItemModel data = Get.arguments;
   final ApiServices _apiServices = ApiServices();
   String? _url;
   InAppWebViewController? _webViewController;
@@ -43,15 +42,16 @@ class _DetailState extends State<Detail> {
   void initState() {
     super.initState();
     setState(() {
-      Future.microtask(
-        () {
-          if (data.numberOfSeasons != null) {
-            _c.getEpisode(data.id ?? 0, season);
-          }
+      // TODO IMPLEMENT FETCH EPISODES
+      // Future.microtask(
+      //   () {
+      //     if (data.numberOfSeasons != null) {
+      //       _c.getEpisode(data.id ?? 0, season);
+      //     }
 
-          _c.getSubtitlePath(data.externalIds?.imdbId ?? '');
-        },
-      );
+      //     _c.getSubtitlePath(data.externalIds?.imdbId ?? '');
+      //   },
+      // );
     });
   }
 
@@ -68,30 +68,33 @@ class _DetailState extends State<Detail> {
   }
 
   void _playMovie({int? episode}) async {
-    setState(() => movieLoading = true);
-    PlayerArgument argument;
-    List<SourceModel>? response;
+    // TODO IMPLEMENT PLAY MOVIE
+    // setState(() => movieLoading = true);
+    // PlayerArgument argument;
+    // List<SourceModel>? response;
 
-    if (data.numberOfSeasons != null) {
-      response = await _apiServices.getSources(
-        imdb: data.externalIds?.imdbId,
-        season: season,
-        episode: episode,
-      );
-    } else {
-      response = await _apiServices.getSources(imdb: data.externalIds?.imdbId);
-    }
+    // if (data.numberOfSeasons != null) {
+    //   response = await _apiServices.getSources(
+    //     imdb: data.externalIds?.imdbId,
+    //     season: season,
+    //     episode: episode,
+    //   );
+    // } else {
+    //   // IMPLEMENT GET MOVIE SOURCE
+    //   response = await _apiServices.getSources(imdb: data.externalIds?.imdbId);
+    // }
 
-    if (response.isNotEmpty) {
-      argument = PlayerArgument(url: response.first.file!, subtitle: _c.subtitleRaw, movie: data);
-      SystemChrome.setPreferredOrientations([
-        DeviceOrientation.landscapeRight,
-        DeviceOrientation.landscapeLeft,
-      ]);
-      if (mounted) Get.toNamed('/player', arguments: argument);
-    }
+    // if (response.isNotEmpty) {
+    //   argument = PlayerArgument(
+    //       url: response.first.file!, subtitle: _c.subtitleRaw, movie: data);
+    //   SystemChrome.setPreferredOrientations([
+    //     DeviceOrientation.landscapeRight,
+    //     DeviceOrientation.landscapeLeft,
+    //   ]);
+    //   if (mounted) Get.toNamed('/player', arguments: argument);
+    // }
 
-    setState(() => movieLoading = false);
+    // setState(() => movieLoading = false);
   }
 
   Future<void> _showSubtitle() {
@@ -133,7 +136,9 @@ class _DetailState extends State<Detail> {
                       child: Row(
                         children: [
                           SizedBox(width: 20),
-                          Text("Custom Subtitle", style: TextStyle(fontWeight: FontWeight.w600, fontSize: 20)),
+                          Text("Custom Subtitle",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w600, fontSize: 20)),
                         ],
                       ),
                     ),
@@ -154,14 +159,18 @@ class _DetailState extends State<Detail> {
                         child: ListView(
                           key: ValueKey('builder $selectedTile'),
                           children: [
-                            ...(_c.subtitlePathModel?.entries ?? []).map((itemKeys) {
+                            ...(_c.subtitlePathModel?.entries ?? [])
+                                .map((itemKeys) {
                               return Theme(
-                                data: themeData.copyWith(dividerColor: Colors.white.withOpacity(0.1)),
+                                data: themeData.copyWith(
+                                    dividerColor:
+                                        Colors.white.withOpacity(0.1)),
                                 child: ExpansionTile(
                                   textColor: primaryColor,
                                   collapsedTextColor: Colors.white,
                                   title: Text(itemKeys.key.toUpperCase()),
-                                  initiallyExpanded: selectedTile == itemKeys.key.toLowerCase(),
+                                  initiallyExpanded: selectedTile ==
+                                      itemKeys.key.toLowerCase(),
                                   onExpansionChanged: (value) {
                                     setState(() {
                                       selectedTile = itemKeys.key.toLowerCase();
@@ -170,24 +179,41 @@ class _DetailState extends State<Detail> {
                                     sS(() {});
                                   },
                                   children: [
-                                    ...(_c.subtitlePathModel?[itemKeys.key] ?? []).map((e) {
+                                    ...(_c.subtitlePathModel?[itemKeys.key] ??
+                                            [])
+                                        .map((e) {
                                       return Column(
                                         children: [
-                                          Divider(height: 1, color: Colors.white.withOpacity(0.1)),
+                                          Divider(
+                                              height: 1,
+                                              color: Colors.white
+                                                  .withOpacity(0.1)),
                                           ListTile(
-                                            trailing: subpathLoading && selectedPath == e.name
-                                                ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator())
+                                            trailing: subpathLoading &&
+                                                    selectedPath == e.name
+                                                ? const SizedBox(
+                                                    width: 20,
+                                                    height: 20,
+                                                    child:
+                                                        CircularProgressIndicator())
                                                 : (selectedPath == e.name)
-                                                    ? Icon(Remix.check_fill, color: primaryColor)
+                                                    ? Icon(Remix.check_fill,
+                                                        color: primaryColor)
                                                     : null,
-                                            contentPadding: const EdgeInsets.symmetric(horizontal: 20),
+                                            contentPadding:
+                                                const EdgeInsets.symmetric(
+                                                    horizontal: 20),
                                             onTap: () async {
                                               sS(() {
                                                 subpathLoading = true;
                                                 selectedPath = e.name;
                                               });
-                                              await _c.getSubtitleRawData(data.externalIds?.imdbId ?? '', e.path ?? '');
-                                              sS(() => subpathLoading = false);
+                                              // TODO IMPLEMENT GET SUBTITLE
+                                              // await _c.getSubtitleRawData(
+                                              //     data.externalIds?.imdbId ??
+                                              //         '',
+                                              //     e.path ?? '');
+                                              // sS(() => subpathLoading = false);
                                             },
                                             title: Text(e.name ?? ''),
                                           ),
@@ -248,7 +274,9 @@ class _DetailState extends State<Detail> {
                 const SizedBox(height: 5),
                 const Padding(
                   padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                  child: Text("Choose Season", style: TextStyle(fontWeight: FontWeight.w600, fontSize: 20)),
+                  child: Text("Choose Season",
+                      style:
+                          TextStyle(fontWeight: FontWeight.w600, fontSize: 20)),
                 ),
                 const SizedBox(height: 10),
                 Expanded(
@@ -260,13 +288,16 @@ class _DetailState extends State<Detail> {
                           (e) => Column(
                             children: [
                               ListTile(
-                                contentPadding: const EdgeInsets.symmetric(horizontal: 20),
+                                contentPadding:
+                                    const EdgeInsets.symmetric(horizontal: 20),
                                 onTap: () {
-                                  Get.back(result: e.seasonNumber);
+                                  Get.back(result: e);
                                 },
-                                title: Text(e.name ?? ''),
+                                title: Text(e),
                               ),
-                              Divider(height: 1, color: Colors.white.withOpacity(0.1)),
+                              Divider(
+                                  height: 1,
+                                  color: Colors.white.withOpacity(0.1)),
                             ],
                           ),
                         )
@@ -288,7 +319,9 @@ class _DetailState extends State<Detail> {
   Widget build(BuildContext context) {
     return Obx(
       () => Scaffold(
-        body: (data.numberOfSeasons != null && _c.episodeDataStatus.isLoading) || _c.subtitleDataStatus.isLoading
+        body: (data.numberOfSeasons != null &&
+                    _c.episodeDataStatus.isLoading) ||
+                _c.subtitleDataStatus.isLoading
             ? Center(child: CircularProgressIndicator(color: primaryColor))
             : Stack(
                 children: [
@@ -301,7 +334,7 @@ class _DetailState extends State<Detail> {
                           image: DecorationImage(
                             opacity: 0.3,
                             image: CachedNetworkImageProvider(
-                              'https://image.tmdb.org/t/p/w500/${data.backdropPath}',
+                              '${data.cover}',
                             ),
                           ),
                         ),
@@ -320,13 +353,18 @@ class _DetailState extends State<Detail> {
                                           AspectRatio(
                                             aspectRatio: 16 / 10,
                                             child: InAppWebView(
-                                              initialSettings: InAppWebViewSettings(javaScriptEnabled: true, supportZoom: true),
-                                              initialUrlRequest: URLRequest(url: WebUri(_url!)),
+                                              initialSettings:
+                                                  InAppWebViewSettings(
+                                                      javaScriptEnabled: true,
+                                                      supportZoom: true),
+                                              initialUrlRequest: URLRequest(
+                                                  url: WebUri(_url!)),
                                               onWebViewCreated: (controller) {
                                                 _webViewController = controller;
                                               },
                                               onEnterFullscreen: (controller) {
-                                                AutoOrientation.landscapeAutoMode();
+                                                AutoOrientation
+                                                    .landscapeAutoMode();
                                               },
                                             ),
                                           ),
@@ -335,15 +373,18 @@ class _DetailState extends State<Detail> {
                                             child: Align(
                                               alignment: Alignment.topRight,
                                               child: Container(
-                                                margin: const EdgeInsets.only(top: 15, right: 15),
+                                                margin: const EdgeInsets.only(
+                                                    top: 15, right: 15),
                                                 width: 20,
                                                 height: 20,
                                                 decoration: BoxDecoration(
                                                   shape: BoxShape.circle,
-                                                  color: Colors.white.withOpacity(0.2),
+                                                  color: Colors.white
+                                                      .withOpacity(0.2),
                                                 ),
                                                 child: const Center(
-                                                  child: Icon(Remix.close_line, size: 12),
+                                                  child: Icon(Remix.close_line,
+                                                      size: 12),
                                                 ),
                                               ),
                                             ),
@@ -352,13 +393,18 @@ class _DetailState extends State<Detail> {
                                       );
                                     } else {
                                       return Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 15),
-                                        child: MovieSummary(data: data, play: _playMovie, isLoading: movieLoading),
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 15),
+                                        child: MovieSummary(
+                                            data: data,
+                                            play: _playMovie,
+                                            isLoading: movieLoading),
                                       );
                                     }
                                   }),
                                   Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 15),
                                     child: MovieInfo(data: data),
                                   ),
                                 ],
@@ -379,17 +425,20 @@ class _DetailState extends State<Detail> {
                                 setState(() {
                                   season = seasonNumber;
                                 });
-
-                                await _c.getEpisode(data.id ?? 0, season);
+                                // TODO IMPLEMENT FETCH EPISODES
+                                // await _c.getEpisode(data.id ?? 0, season);
                               }
                             },
                             initialValue: 'Season $season',
                             decoration: InputDecoration(
                               isDense: true,
                               contentPadding: const EdgeInsets.only(left: 15),
-                              border: const OutlineInputBorder(borderSide: BorderSide.none),
-                              enabledBorder: const OutlineInputBorder(borderSide: BorderSide.none),
-                              disabledBorder: const OutlineInputBorder(borderSide: BorderSide.none),
+                              border: const OutlineInputBorder(
+                                  borderSide: BorderSide.none),
+                              enabledBorder: const OutlineInputBorder(
+                                  borderSide: BorderSide.none),
+                              disabledBorder: const OutlineInputBorder(
+                                  borderSide: BorderSide.none),
                               suffixIcon: const Icon(Remix.arrow_down_line),
                               filled: true,
                               fillColor: Colors.white.withOpacity(0.1),
@@ -404,17 +453,27 @@ class _DetailState extends State<Detail> {
                             TabBar(
                               indicatorSize: TabBarIndicatorSize.tab,
                               indicator: UnderlineTabIndicator(
-                                borderSide: BorderSide(color: primaryColor, width: 2),
+                                borderSide:
+                                    BorderSide(color: primaryColor, width: 2),
                                 insets: const EdgeInsets.only(bottom: 45),
                               ),
-                              tabs: [if (data.numberOfSeasons != null) const Tab(text: 'Episodes'), const Tab(text: 'Trailers & More'), const Tab(text: 'Collections')],
+                              tabs: [
+                                if (data.numberOfSeasons != null)
+                                  const Tab(text: 'Episodes'),
+                                const Tab(text: 'Trailers & More'),
+                                const Tab(text: 'Collections')
+                              ],
                             ),
                             SizedBox(
                               width: double.infinity,
                               height: 300,
                               child: TabBarView(
                                 children: [
-                                  if (data.numberOfSeasons != null) EpisodeSection(data: data, episodes: _c.episode, play: _playMovie),
+                                  if (data.numberOfSeasons != null)
+                                    EpisodeSection(
+                                        data: data,
+                                        episodes: _c.episode,
+                                        play: _playMovie),
                                   TrailerSection(data: data, play: _play),
                                   MediaSection(data: data),
                                 ],

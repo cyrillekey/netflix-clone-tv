@@ -1,11 +1,16 @@
 import "package:flutter/material.dart";
 import 'package:netflix/constant.dart';
-import 'package:netflix/models/tmdb_model.dart';
+import 'package:netflix/models/item_model.dart';
+
 import 'package:remixicon/remixicon.dart';
 
 class MovieDetailHeader extends StatelessWidget {
-  const MovieDetailHeader({super.key, required this.data, required this.onTap, required this.enableSubtitle});
-  final Tmdb data;
+  const MovieDetailHeader(
+      {super.key,
+      required this.data,
+      required this.onTap,
+      required this.enableSubtitle});
+  final ItemModel data;
   final Function() onTap;
   final bool enableSubtitle;
 
@@ -23,7 +28,7 @@ class MovieDetailHeader extends StatelessWidget {
             child: SizedBox(
               width: 200,
               child: Text(
-                '${data.name}',
+                '${data.title}',
                 style: const TextStyle(fontSize: 16),
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.center,
@@ -36,7 +41,8 @@ class MovieDetailHeader extends StatelessWidget {
               onTap: onTap,
               child: Container(
                 margin: const EdgeInsets.only(right: 15),
-                child:  Icon(Remix.closed_captioning_line, color: enableSubtitle ? primaryColor : Colors.white),
+                child: Icon(Remix.closed_captioning_line,
+                    color: enableSubtitle ? primaryColor : Colors.white),
               ),
             ),
           ),
