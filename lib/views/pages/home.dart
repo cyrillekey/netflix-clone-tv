@@ -81,40 +81,54 @@ class _HomeState extends State<Home> {
             width: 15,
             height: 30,
           ),
-          // title: SizedBox(
-          //   height: 60 - (40 * _scrollOffset / 140),
-          //   child: Padding(
-          //     padding: const EdgeInsets.only(
-          //         left: 20, right: 20, bottom: 20, top: 20),
-          //     child: Row(
-          //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //       children: [
-          //         const Text("TV Shows"),
-          //         const Text("Movies"),
-          //         InkWell(
-          //           onTap: () => widget.openGenre(),
-          //           child: Row(
-          //             children: [
-          //               Text(_c.category ?? 'Categories'),
-          //               const SizedBox(width: 5),
-          //               Opacity(
-          //                   opacity: 1 - (_scrollOffset / 140),
-          //                   child: const Icon(Remix.arrow_down_s_line)),
-          //             ],
-          //           ),
-          //         ),
-          //       ],
-          //     ),
-          //   ),
-          // ),
+          title: SizedBox(
+            height: 60 - (40 * _scrollOffset / 140),
+            child: Padding(
+              padding: const EdgeInsets.only(
+                  left: 20, right: 20, bottom: 20, top: 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text("TV Shows"),
+                  const Text("Movies"),
+                  InkWell(
+                    onTap: () => widget.openGenre(),
+                    child: Row(
+                      children: [
+                        Text(_c.category ?? 'Categories'),
+                        const SizedBox(width: 5),
+                        Opacity(
+                            opacity: 1 - (_scrollOffset / 140),
+                            child: const Icon(Remix.arrow_down_s_line)),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
           actions: [
-            Row(
-              children: [
-                Image.asset(
-                  'assets/images/user.png',
-                  width: 25,
-                ),
-              ],
+            Focus(
+              child: Builder(builder: (context) {
+                return Padding(
+                  padding: const EdgeInsets.only(right: 8.0),
+                  child: Container(
+                    padding: const EdgeInsets.all(2),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        border: Focus.of(context).hasFocus
+                            ? Border.all(
+                                color: Colors.white,
+                                width: 2,
+                              )
+                            : Border.all()),
+                    child: Image.asset(
+                      'assets/images/user.png',
+                      width: 25,
+                    ),
+                  ),
+                );
+              }),
             ),
           ]),
       body: Obx(

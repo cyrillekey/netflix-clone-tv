@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 import 'package:netflix/constant.dart';
@@ -15,17 +16,30 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-      title: 'Netflix',
-      debugShowCheckedModeBanner: false,
-      theme: themeData,
-      home: const SplashScreen(),
-      getPages: [
-        GetPage(name: '/root', page: () => const Root(), transition: Transition.cupertino),
-        GetPage(name: '/detail', page: () => const Detail(), transition: Transition.cupertino),
-        GetPage(name: '/player', page: () => const Player(), transition: Transition.cupertino),
-      ],
-    );
+    return Shortcuts(
+        shortcuts: {
+          LogicalKeySet(LogicalKeyboardKey.select): const ActivateIntent(),
+        },
+        child: GetMaterialApp(
+          title: 'Netflix',
+          debugShowCheckedModeBanner: false,
+          theme: themeData,
+          home: const SplashScreen(),
+          getPages: [
+            GetPage(
+                name: '/root',
+                page: () => const Root(),
+                transition: Transition.cupertino),
+            GetPage(
+                name: '/detail',
+                page: () => const Detail(),
+                transition: Transition.cupertino),
+            GetPage(
+                name: '/player',
+                page: () => const Player(),
+                transition: Transition.cupertino),
+          ],
+        ));
   }
 }
 
@@ -40,7 +54,8 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(milliseconds: 3500), () => Get.offAndToNamed('/root'));
+    Future.delayed(
+        const Duration(milliseconds: 3500), () => Get.offAndToNamed('/root'));
   }
 
   @override

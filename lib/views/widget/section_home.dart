@@ -9,29 +9,33 @@ class SectionHome extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 20),
-      child: IntrinsicHeight(
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 20),
-              child: Text(title,
-                  style: const TextStyle(
-                      fontSize: 20, fontWeight: FontWeight.bold)),
-            ),
-            const SizedBox(height: 15),
-            SingleChildScrollView(
-              padding: const EdgeInsets.fromLTRB(20, 0, 10, 0),
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: List.generate(
-                    data.length, (index) => CardMovie(movie: data[index])),
+    return Center(
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 20),
+        child: IntrinsicHeight(
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 20),
+                child: Focus(
+                  child: Text(title,
+                      style: const TextStyle(
+                          fontSize: 20, fontWeight: FontWeight.bold)),
+                ),
               ),
-            )
-          ],
+              const SizedBox(height: 15),
+              SingleChildScrollView(
+                padding: const EdgeInsets.fromLTRB(20, 0, 10, 0),
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: List.generate(
+                      data.length, (index) => CardMovie(movie: data[index])),
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );
