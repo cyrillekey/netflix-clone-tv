@@ -9,6 +9,7 @@ import 'package:netflix/views/pages/root.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   runApp(const MyApp());
 }
 

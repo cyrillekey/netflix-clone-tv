@@ -73,64 +73,30 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      appBar: AppBar(
-          elevation: 0,
-          backgroundColor: Colors.black,
-          leading: Image.asset(
-            'assets/images/netflix_logo.png',
-            width: 15,
-            height: 30,
-          ),
-          title: SizedBox(
-            height: 60 - (40 * _scrollOffset / 140),
-            child: Padding(
-              padding: const EdgeInsets.only(
-                  left: 20, right: 20, bottom: 20, top: 20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text("TV Shows"),
-                  const Text("Movies"),
-                  InkWell(
-                    onTap: () => widget.openGenre(),
-                    child: Row(
-                      children: [
-                        Text(_c.category ?? 'Categories'),
-                        const SizedBox(width: 5),
-                        Opacity(
-                            opacity: 1 - (_scrollOffset / 140),
-                            child: const Icon(Remix.arrow_down_s_line)),
-                      ],
-                    ),
-                  ),
-                ],
+      appBar: AppBar(elevation: 0, backgroundColor: Colors.black, actions: [
+        Focus(
+          child: Builder(builder: (context) {
+            return Padding(
+              padding: const EdgeInsets.only(right: 8.0),
+              child: Container(
+                padding: const EdgeInsets.all(2),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(5),
+                    border: Focus.of(context).hasFocus
+                        ? Border.all(
+                            color: Colors.white,
+                            width: 2,
+                          )
+                        : Border.all()),
+                child: Image.asset(
+                  'assets/images/user.png',
+                  width: 25,
+                ),
               ),
-            ),
-          ),
-          actions: [
-            Focus(
-              child: Builder(builder: (context) {
-                return Padding(
-                  padding: const EdgeInsets.only(right: 8.0),
-                  child: Container(
-                    padding: const EdgeInsets.all(2),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
-                        border: Focus.of(context).hasFocus
-                            ? Border.all(
-                                color: Colors.white,
-                                width: 2,
-                              )
-                            : Border.all()),
-                    child: Image.asset(
-                      'assets/images/user.png',
-                      width: 25,
-                    ),
-                  ),
-                );
-              }),
-            ),
-          ]),
+            );
+          }),
+        ),
+      ]),
       body: Obx(
         () => (_c.category == null && _c.status.isLoading && _c.movies.isEmpty)
             ? const Center(child: CircularProgressIndicator())
@@ -155,7 +121,7 @@ class _HomeState extends State<Home> {
                                     data: _c.trending, title: 'Trending'),
                                 SectionHome(
                                     data: _c.latestMovies,
-                                    title: 'Latest Movie'),
+                                    title: 'Latest Movies'),
                                 SectionHome(
                                     data: _c.latestShows,
                                     title: 'Latest Series'),
@@ -266,8 +232,8 @@ class _HomeState extends State<Home> {
                                                     ElevatedButton(
                                                       onPressed: () =>
                                                           Get.toNamed('/detail',
-                                                              arguments:
-                                                                  data.first),
+                                                              arguments: data
+                                                                  .first.id),
                                                       style: primaryButton,
                                                       child: const Row(
                                                         children: [

@@ -26,6 +26,22 @@ class ApiServices {
     }
   }
 
+  Future<ItemModel?> getMovieDetails(String movieId) async {
+    try {
+      final response =
+          await http.get(Uri.parse("$baseURL/movies/flixhq/info?id=$movieId"));
+      if (response.statusCode == 200) {
+        Map<String, dynamic> data = jsonDecode(response.body);
+        ItemModel movie = ItemModel.fromJson(data);
+        return movie;
+      } else {
+        return null;
+      }
+    } catch (e) {
+      return null;
+    }
+  }
+
   Future<List<ItemModel>> getLatestSeries() async {
     try {
       final response =
@@ -47,7 +63,7 @@ class ApiServices {
   Future<List<ItemModel>> getLatestMovies() async {
     try {
       final response =
-          await http.get(Uri.parse("$baseURL/flixhq/recent-movies"));
+          await http.get(Uri.parse("$baseURL/movies/flixhq/recent-movies"));
       if (response.statusCode == 200) {
         List<ItemModel> items = List.from(jsonDecode(response.body))
             .map((e) => ItemModel.fromJson(e))

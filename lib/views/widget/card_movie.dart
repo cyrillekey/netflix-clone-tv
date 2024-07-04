@@ -15,7 +15,7 @@ class CardMovie extends StatelessWidget {
       child: Builder(builder: (context) {
         bool hasFocus = Focus.of(context).hasFocus;
         return GestureDetector(
-          onTap: () => Get.toNamed('/detail', arguments: movie),
+          onTap: () => Get.toNamed('/detail', arguments: movie.id),
           child: Container(
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(5),

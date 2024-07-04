@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:netflix/models/episode_model.dart';
 import 'package:netflix/models/item_model.dart';
 
 class EpisodeSection extends StatelessWidget {
@@ -9,7 +8,7 @@ class EpisodeSection extends StatelessWidget {
       required this.data,
       required this.episodes,
       required this.play});
-  final List<Episodes> episodes;
+  final List<Episode> episodes;
   final Function({int? episode}) play;
   final ItemModel data;
 
@@ -20,7 +19,7 @@ class EpisodeSection extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
       itemCount: episodes.length,
       itemBuilder: (context, index) {
-        Episodes episode = episodes[index];
+        Episode episode = episodes[index];
         return GestureDetector(
           onTap: () => play(episode: index + 1),
           child: Column(
@@ -30,7 +29,7 @@ class EpisodeSection extends StatelessWidget {
                 children: [
                   CachedNetworkImage(
                     imageUrl:
-                        'https://image.tmdb.org/t/p/w200/${episode.stillPath}',
+                        'https://img.flixhq.to/xxrz/250x400/379/e9/e2/e9e299a70d3771d9716c68bb3bcaf746/e9e299a70d3771d9716c68bb3bcaf746.jpg',
                     width: 120,
                     errorWidget: (context, url, error) => Opacity(
                       opacity: 0.3,
@@ -45,8 +44,8 @@ class EpisodeSection extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(episode.name!),
-                        Text('${episode.runtime} mins',
+                        Text(episode.title!),
+                        Text('N/A mins',
                             style: TextStyle(
                                 fontSize: 12,
                                 color: Colors.white.withOpacity(0.4))),
@@ -56,8 +55,7 @@ class EpisodeSection extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 15),
-              Text(episode.overview!,
-                  maxLines: 2, style: const TextStyle(fontSize: 12))
+              const Text('N/A', maxLines: 2, style: TextStyle(fontSize: 12))
             ],
           ),
         );

@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 import 'package:netflix/controllers/services/api_services.dart';
-import 'package:netflix/models/episode_model.dart';
+import 'package:netflix/models/item_model.dart';
 import 'package:netflix/models/status_enum.dart';
 import 'package:netflix/models/subtitle_path_model.dart';
 
@@ -9,41 +9,34 @@ class DetailController extends GetxController {
   final ApiServices _apiServices = ApiServices();
 
   /* state */
-  final Rx<List<Episodes>> _episode = Rx<List<Episodes>>([]);
+  final Rx<List<Episode>> _episode = Rx<List<Episode>>([]);
   final Rx<Status> _episodeDataStatus = Rx<Status>(Status.LOADING);
   final Rx<Map<String, List<SubtitlePathModel>>?> _subtitlePathModel = Rx(null);
   final Rx<Status> _subtitleDataStatus = Rx<Status>(Status.LOADING);
   final Rx<String?> _subtitleRaw = Rx(null);
   final Rx<Status> _subtitleRawDataStatus = Rx<Status>(Status.LOADING);
-
+  final Rx<ItemModel?> _item = Rx(null);
 
   /* getter */
-  List<Episodes> get episode => _episode.value;
+  List<Episode> get episode => _episode.value;
   Status get episodeDataStatus => _episodeDataStatus.value;
-  Map<String, List<SubtitlePathModel>>? get subtitlePathModel => _subtitlePathModel.value;
-  Status get subtitleDataStatus => _subtitleDataStatus.value;
+  Map<String, List<SubtitlePathModel>>? get subtitlePathModel =>
+      _subtitlePathModel.value;
+
   String? get subtitleRaw => _subtitleRaw.value;
   Status get subtitleRawDataStatus => _subtitleRawDataStatus.value;
-
-  Future<void> getEpisode(int id, int season) async {
-    try {
-      final response = await _apiServices.getEpisode(id, season);
-      _episode.value = response;
-      _episodeDataStatus.value = Status.SUCCESS;
-    } catch (e) {
-      _episodeDataStatus.value = Status.ERROR;
-      rethrow;
-    }
-  }
+  ItemModel? get item => _item.value;
 
   Future<void> getSubtitlePath(String imdbId) async {
     try {
       final response = await _apiServices.getSubtitlePath(imdbId);
       Map<String, List<SubtitlePathModel>> result = {};
-      for(var item in response.keys) {
+      for (var item in response.keys) {
         List<SubtitlePathModel> resultList = [];
-        for(var list in response[item]!) {
-          if(resultList.where((element) => element.name == list.name).isEmpty) {
+        for (var list in response[item]!) {
+          if (resultList
+              .where((element) => element.name == list.name)
+              .isEmpty) {
             resultList.add(list);
           }
         }
@@ -71,5 +64,18 @@ class DetailController extends GetxController {
 
   void resetSubtitle() {
     _subtitleDataStatus.value = Status.LOADING;
+  }
+
+  Future<void> getMovieDetails(String movieId) async {
+    try {
+      final response = await _apiServices.getMovieDetails(movieId);
+      _item.value = response;
+      _episode.value = response?.episodes ?? [];
+
+      _episodeDataStatus.value = Status.SUCCESS;
+    } catch (e) {
+      _episodeDataStatus.value = Status.SUCCESS;
+      print(e);
+    }
   }
 }

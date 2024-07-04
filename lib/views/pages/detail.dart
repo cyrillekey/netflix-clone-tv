@@ -2,13 +2,10 @@ import 'dart:ui';
 import 'package:auto_orientation/auto_orientation.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import "package:flutter/material.dart";
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:netflix/constant.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:netflix/controllers/detail_controller.dart';
-import 'package:netflix/controllers/services/api_services.dart';
-import 'package:netflix/models/item_model.dart';
 
 import 'package:netflix/views/widget/episode_section.dart';
 import 'package:netflix/views/widget/media_section.dart';
@@ -27,8 +24,7 @@ class Detail extends StatefulWidget {
 
 class _DetailState extends State<Detail> {
   final DetailController _c = Get.put(DetailController());
-  final ItemModel data = Get.arguments;
-  final ApiServices _apiServices = ApiServices();
+  final String data = Get.arguments;
   String? _url;
   InAppWebViewController? _webViewController;
   String? iframe;
@@ -42,16 +38,11 @@ class _DetailState extends State<Detail> {
   void initState() {
     super.initState();
     setState(() {
-      // TODO IMPLEMENT FETCH EPISODES
-      // Future.microtask(
-      //   () {
-      //     if (data.numberOfSeasons != null) {
-      //       _c.getEpisode(data.id ?? 0, season);
-      //     }
-
-      //     _c.getSubtitlePath(data.externalIds?.imdbId ?? '');
-      //   },
-      // );
+      Future.microtask(
+        () {
+          _c.getMovieDetails(data);
+        },
+      );
     });
   }
 
@@ -143,91 +134,77 @@ class _DetailState extends State<Detail> {
                       ),
                     ),
                     const SizedBox(height: 10),
-                    if (_c.subtitleDataStatus.isLoading) ...[
-                      SizedBox(
-                        width: double.infinity,
-                        height: 500,
-                        child: Center(
-                          child: CircularProgressIndicator(
-                            color: primaryColor,
-                          ),
-                        ),
-                      )
-                    ] else ...[
-                      SizedBox(
-                        height: 500,
-                        child: ListView(
-                          key: ValueKey('builder $selectedTile'),
-                          children: [
-                            ...(_c.subtitlePathModel?.entries ?? [])
-                                .map((itemKeys) {
-                              return Theme(
-                                data: themeData.copyWith(
-                                    dividerColor:
-                                        Colors.white.withOpacity(0.1)),
-                                child: ExpansionTile(
-                                  textColor: primaryColor,
-                                  collapsedTextColor: Colors.white,
-                                  title: Text(itemKeys.key.toUpperCase()),
-                                  initiallyExpanded: selectedTile ==
-                                      itemKeys.key.toLowerCase(),
-                                  onExpansionChanged: (value) {
-                                    setState(() {
-                                      selectedTile = itemKeys.key.toLowerCase();
-                                    });
+                    SizedBox(
+                      height: 500,
+                      child: ListView(
+                        key: ValueKey('builder $selectedTile'),
+                        children: [
+                          ...(_c.subtitlePathModel?.entries ?? [])
+                              .map((itemKeys) {
+                            return Theme(
+                              data: themeData.copyWith(
+                                  dividerColor: Colors.white.withOpacity(0.1)),
+                              child: ExpansionTile(
+                                textColor: primaryColor,
+                                collapsedTextColor: Colors.white,
+                                title: Text(itemKeys.key.toUpperCase()),
+                                initiallyExpanded:
+                                    selectedTile == itemKeys.key.toLowerCase(),
+                                onExpansionChanged: (value) {
+                                  setState(() {
+                                    selectedTile = itemKeys.key.toLowerCase();
+                                  });
 
-                                    sS(() {});
-                                  },
-                                  children: [
-                                    ...(_c.subtitlePathModel?[itemKeys.key] ??
-                                            [])
-                                        .map((e) {
-                                      return Column(
-                                        children: [
-                                          Divider(
-                                              height: 1,
-                                              color: Colors.white
-                                                  .withOpacity(0.1)),
-                                          ListTile(
-                                            trailing: subpathLoading &&
-                                                    selectedPath == e.name
-                                                ? const SizedBox(
-                                                    width: 20,
-                                                    height: 20,
-                                                    child:
-                                                        CircularProgressIndicator())
-                                                : (selectedPath == e.name)
-                                                    ? Icon(Remix.check_fill,
-                                                        color: primaryColor)
-                                                    : null,
-                                            contentPadding:
-                                                const EdgeInsets.symmetric(
-                                                    horizontal: 20),
-                                            onTap: () async {
-                                              sS(() {
-                                                subpathLoading = true;
-                                                selectedPath = e.name;
-                                              });
-                                              // TODO IMPLEMENT GET SUBTITLE
-                                              // await _c.getSubtitleRawData(
-                                              //     data.externalIds?.imdbId ??
-                                              //         '',
-                                              //     e.path ?? '');
-                                              // sS(() => subpathLoading = false);
-                                            },
-                                            title: Text(e.name ?? ''),
-                                          ),
-                                        ],
-                                      );
-                                    })
-                                  ],
-                                ),
-                              );
-                            })
-                          ],
-                        ),
+                                  sS(() {});
+                                },
+                                children: [
+                                  ...(_c.subtitlePathModel?[itemKeys.key] ?? [])
+                                      .map((e) {
+                                    return Column(
+                                      children: [
+                                        Divider(
+                                            height: 1,
+                                            color:
+                                                Colors.white.withOpacity(0.1)),
+                                        ListTile(
+                                          trailing: subpathLoading &&
+                                                  selectedPath == e.name
+                                              ? const SizedBox(
+                                                  width: 20,
+                                                  height: 20,
+                                                  child:
+                                                      CircularProgressIndicator())
+                                              : (selectedPath == e.name)
+                                                  ? Icon(Remix.check_fill,
+                                                      color: primaryColor)
+                                                  : null,
+                                          contentPadding:
+                                              const EdgeInsets.symmetric(
+                                                  horizontal: 20),
+                                          onTap: () async {
+                                            sS(() {
+                                              subpathLoading = true;
+                                              selectedPath = e.name;
+                                            });
+                                            // TODO IMPLEMENT GET SUBTITLE
+                                            // await _c.getSubtitleRawData(
+                                            //     data.externalIds?.imdbId ??
+                                            //         '',
+                                            //     e.path ?? '');
+                                            // sS(() => subpathLoading = false);
+                                          },
+                                          title: Text(e.name ?? ''),
+                                        ),
+                                      ],
+                                    );
+                                  })
+                                ],
+                              ),
+                            );
+                          })
+                        ],
                       ),
-                    ],
+                    ),
                     const SizedBox(height: 10),
                     Padding(padding: MediaQuery.of(context).viewInsets),
                   ],
@@ -284,7 +261,7 @@ class _DetailState extends State<Detail> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        ...(data.seasons ?? []).map(
+                        ...(_c.item?.seasons ?? []).map(
                           (e) => Column(
                             children: [
                               ListTile(
@@ -319,9 +296,8 @@ class _DetailState extends State<Detail> {
   Widget build(BuildContext context) {
     return Obx(
       () => Scaffold(
-        body: (data.numberOfSeasons != null &&
-                    _c.episodeDataStatus.isLoading) ||
-                _c.subtitleDataStatus.isLoading
+        body: (_c.item?.numberOfSeasons != null &&
+                _c.episodeDataStatus.isLoading)
             ? Center(child: CircularProgressIndicator(color: primaryColor))
             : Stack(
                 children: [
@@ -334,7 +310,7 @@ class _DetailState extends State<Detail> {
                           image: DecorationImage(
                             opacity: 0.3,
                             image: CachedNetworkImageProvider(
-                              '${data.cover}',
+                              '${_c.item?.cover}',
                             ),
                           ),
                         ),
@@ -396,7 +372,7 @@ class _DetailState extends State<Detail> {
                                         padding: const EdgeInsets.symmetric(
                                             horizontal: 15),
                                         child: MovieSummary(
-                                            data: data,
+                                            data: _c.item!,
                                             play: _playMovie,
                                             isLoading: movieLoading),
                                       );
@@ -405,7 +381,7 @@ class _DetailState extends State<Detail> {
                                   Padding(
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 15),
-                                    child: MovieInfo(data: data),
+                                    child: MovieInfo(data: _c.item!),
                                   ),
                                 ],
                               ),
@@ -413,7 +389,7 @@ class _DetailState extends State<Detail> {
                           ),
                         ),
                       ),
-                      if (data.numberOfSeasons != null)
+                      if (_c.item?.numberOfSeasons != null)
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 15),
                           child: TextFormField(
@@ -447,7 +423,7 @@ class _DetailState extends State<Detail> {
                         ),
                       const SizedBox(height: 20),
                       DefaultTabController(
-                        length: data.numberOfSeasons != null ? 3 : 2,
+                        length: _c.item?.numberOfSeasons != null ? 3 : 2,
                         child: Column(
                           children: [
                             TabBar(
@@ -458,7 +434,7 @@ class _DetailState extends State<Detail> {
                                 insets: const EdgeInsets.only(bottom: 45),
                               ),
                               tabs: [
-                                if (data.numberOfSeasons != null)
+                                if (_c.item?.numberOfSeasons != null)
                                   const Tab(text: 'Episodes'),
                                 const Tab(text: 'Trailers & More'),
                                 const Tab(text: 'Collections')
@@ -469,13 +445,13 @@ class _DetailState extends State<Detail> {
                               height: 300,
                               child: TabBarView(
                                 children: [
-                                  if (data.numberOfSeasons != null)
+                                  if (_c.item?.numberOfSeasons != null)
                                     EpisodeSection(
-                                        data: data,
+                                        data: _c.item!,
                                         episodes: _c.episode,
                                         play: _playMovie),
-                                  TrailerSection(data: data, play: _play),
-                                  MediaSection(data: data),
+                                  TrailerSection(data: _c.item!, play: _play),
+                                  MediaSection(data: _c.item!),
                                 ],
                               ),
                             )
@@ -486,7 +462,7 @@ class _DetailState extends State<Detail> {
                   ),
                   MovieDetailHeader(
                     enableSubtitle: selectedPath != null,
-                    data: data,
+                    data: _c.item!,
                     onTap: () async {
                       await _showSubtitle();
                     },

@@ -13,7 +13,7 @@ class CardNewest extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => Get.toNamed('/detail', arguments: movie),
+      onTap: () => Get.toNamed('/detail', arguments: movie.id),
       child: Container(
         margin: const EdgeInsets.only(bottom: 15),
         child: Row(
