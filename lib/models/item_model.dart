@@ -27,7 +27,7 @@ class ItemModel {
   List<Recommendation>? recommendations;
   List<Episode>? episodes;
   int? numberOfSeasons;
-  List<String>? seasons;
+  List<int>? seasons;
 
   ItemModel(
       {this.id,
@@ -51,6 +51,10 @@ class ItemModel {
       this.seasons});
 
   factory ItemModel.fromJson(Map<String, dynamic> json) {
+    List<Episode> episodes2 = json["episodes"] == null
+        ? []
+        : List<Episode>.from(json["episodes"]!.map((x) => Episode.fromJson(x)));
+    var seasons2 = calculateNumberOfSeasons(episodes2);
     return ItemModel(
       id: json["id"],
       title: json["title"],
@@ -72,15 +76,14 @@ class ItemModel {
       production: json["production"],
       country: json["country"],
       duration: json["duration"],
+      numberOfSeasons: seasons2.length,
+      seasons: seasons2,
       rating: json["rating"],
       recommendations: json["recommendations"] == null
           ? []
           : List<Recommendation>.from(
               json["recommendations"]!.map((x) => Recommendation.fromJson(x))),
-      episodes: json["episodes"] == null
-          ? []
-          : List<Episode>.from(
-              json["episodes"]!.map((x) => Episode.fromJson(x))),
+      episodes: episodes2,
     );
   }
 
@@ -113,24 +116,25 @@ class ItemModel {
 class Episode {
   String? id;
   String? title;
+  int? season;
+  int? episode;
   String? url;
 
-  Episode({
-    this.id,
-    this.title,
-    this.url,
-  });
+  Episode({this.id, this.title, this.url, this.episode, this.season});
 
   factory Episode.fromJson(Map<String, dynamic> json) => Episode(
-        id: json["id"],
-        title: json["title"],
-        url: json["url"],
-      );
+      id: json["id"],
+      title: json["title"],
+      url: json["url"],
+      episode: json['episode'],
+      season: json['season']);
 
   Map<String, dynamic> toJson() => {
         "id": id,
         "title": title,
         "url": url,
+        "season": season,
+        "episode": episode
       };
 }
 
@@ -164,4 +168,19 @@ class Recommendation {
         "duration": duration,
         "type": type,
       };
+}
+
+List<int> calculateNumberOfSeasons(List<Episode> episodes) {
+  // Use a Set to store unique season numbers
+  Set<int> uniqueSeasons = {};
+
+  // Iterate through each episode and add the season number to the set
+  for (Episode episode in episodes) {
+    if (episode.season != null) {
+      uniqueSeasons.add(episode.season!);
+    }
+  }
+
+  // The number of unique seasons is the size of the set
+  return uniqueSeasons.toList();
 }

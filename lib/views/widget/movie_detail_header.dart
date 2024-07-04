@@ -24,18 +24,6 @@ class MovieDetailHeader extends StatelessWidget {
       child: Stack(
         children: [
           Align(
-            alignment: Alignment.bottomCenter,
-            child: SizedBox(
-              width: 200,
-              child: Text(
-                '${data.title}',
-                style: const TextStyle(fontSize: 16),
-                overflow: TextOverflow.ellipsis,
-                textAlign: TextAlign.center,
-              ),
-            ),
-          ),
-          Align(
             alignment: Alignment.bottomRight,
             child: GestureDetector(
               onTap: onTap,

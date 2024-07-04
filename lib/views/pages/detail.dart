@@ -9,7 +9,7 @@ import 'package:netflix/controllers/detail_controller.dart';
 
 import 'package:netflix/views/widget/episode_section.dart';
 import 'package:netflix/views/widget/media_section.dart';
-import 'package:netflix/views/widget/movie_detail_header.dart';
+
 import 'package:netflix/views/widget/movie_info.dart';
 import 'package:netflix/views/widget/movie_summary.dart';
 import 'package:netflix/views/widget/trailer_section.dart';
@@ -270,7 +270,7 @@ class _DetailState extends State<Detail> {
                                 onTap: () {
                                   Get.back(result: e);
                                 },
-                                title: Text(e),
+                                title: Text("Season $e"),
                               ),
                               Divider(
                                   height: 1,
@@ -295,11 +295,15 @@ class _DetailState extends State<Detail> {
   @override
   Widget build(BuildContext context) {
     return Obx(
-      () => Scaffold(
-        body: (_c.item?.numberOfSeasons != null &&
-                _c.episodeDataStatus.isLoading)
-            ? Center(child: CircularProgressIndicator(color: primaryColor))
-            : Stack(
+      () => (_c.episodeDataStatus.isLoading)
+          ? Center(child: CircularProgressIndicator(color: primaryColor))
+          : Scaffold(
+              appBar: AppBar(
+                automaticallyImplyLeading: true,
+                title: Text(_c.item?.title ?? ""),
+                backgroundColor: Colors.black.withOpacity(0.1),
+              ),
+              body: Stack(
                 children: [
                   ListView(
                     padding: const EdgeInsets.all(0),
@@ -389,7 +393,8 @@ class _DetailState extends State<Detail> {
                           ),
                         ),
                       ),
-                      if (_c.item?.numberOfSeasons != null)
+                      if (_c.item?.numberOfSeasons != null &&
+                          _c.item?.type == "TV Series")
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 15),
                           child: TextFormField(
@@ -401,8 +406,6 @@ class _DetailState extends State<Detail> {
                                 setState(() {
                                   season = seasonNumber;
                                 });
-                                // TODO IMPLEMENT FETCH EPISODES
-                                // await _c.getEpisode(data.id ?? 0, season);
                               }
                             },
                             initialValue: 'Season $season',
@@ -423,7 +426,7 @@ class _DetailState extends State<Detail> {
                         ),
                       const SizedBox(height: 20),
                       DefaultTabController(
-                        length: _c.item?.numberOfSeasons != null ? 3 : 2,
+                        length: _c.item?.numberOfSeasons != null ? 4 : 2,
                         child: Column(
                           children: [
                             TabBar(
@@ -437,7 +440,8 @@ class _DetailState extends State<Detail> {
                                 if (_c.item?.numberOfSeasons != null)
                                   const Tab(text: 'Episodes'),
                                 const Tab(text: 'Trailers & More'),
-                                const Tab(text: 'Collections')
+                                const Tab(text: 'Collections'),
+                                const Tab(text: 'Recomendations'),
                               ],
                             ),
                             SizedBox(
@@ -448,10 +452,14 @@ class _DetailState extends State<Detail> {
                                   if (_c.item?.numberOfSeasons != null)
                                     EpisodeSection(
                                         data: _c.item!,
-                                        episodes: _c.episode,
+                                        episodes: _c.episode
+                                            .where((element) =>
+                                                element.season == season)
+                                            .toList(),
                                         play: _playMovie),
                                   TrailerSection(data: _c.item!, play: _play),
                                   MediaSection(data: _c.item!),
+                                  const SizedBox(),
                                 ],
                               ),
                             )
@@ -460,16 +468,16 @@ class _DetailState extends State<Detail> {
                       ),
                     ],
                   ),
-                  MovieDetailHeader(
-                    enableSubtitle: selectedPath != null,
-                    data: _c.item!,
-                    onTap: () async {
-                      await _showSubtitle();
-                    },
-                  ),
+                  // MovieDetailHeader(
+                  //   enableSubtitle: selectedPath != null,
+                  //   data: _c.item!,
+                  //   onTap: () async {
+                  //     await _showSubtitle();
+                  //   },
+                  // ),
                 ],
               ),
-      ),
+            ),
     );
   }
 }

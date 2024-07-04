@@ -52,7 +52,7 @@ class MovieSummary extends StatelessWidget {
             ),
             const SizedBox(width: 15),
             Text(
-              '${data.runtimeType}',
+              '${data.type}',
               style: TextStyle(color: Colors.white.withOpacity(0.4)),
             ),
           ],

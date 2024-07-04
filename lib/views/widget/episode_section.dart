@@ -55,7 +55,6 @@ class EpisodeSection extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 15),
-              const Text('N/A', maxLines: 2, style: TextStyle(fontSize: 12))
             ],
           ),
         );

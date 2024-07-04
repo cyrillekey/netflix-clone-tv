@@ -70,6 +70,8 @@ class DetailController extends GetxController {
     try {
       final response = await _apiServices.getMovieDetails(movieId);
       _item.value = response;
+      print(response?.episodes);
+
       _episode.value = response?.episodes ?? [];
 
       _episodeDataStatus.value = Status.SUCCESS;
