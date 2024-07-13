@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "package:get/get.dart";
 import "package:netflix/models/item_model.dart";
 import "package:netflix/views/widget/card_movie.dart";
 
@@ -26,14 +27,16 @@ class SectionHome extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 15),
-              SingleChildScrollView(
-                padding: const EdgeInsets.fromLTRB(20, 0, 10, 0),
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: List.generate(
-                      data.length, (index) => CardMovie(movie: data[index])),
+              SizedBox(
+                width: Get.width,
+                height: Get.height * 0.40,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: data.length,
+                  itemBuilder: (context, index) =>
+                      CardMovie(movie: data[index]),
                 ),
-              )
+              ),
             ],
           ),
         ),
