@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:netflix/controllers/home_controller.dart';
 import 'package:netflix/views/pages/home.dart';
 import 'package:netflix/views/pages/profile.dart';
 import 'package:netflix/views/pages/search.dart';
@@ -14,7 +13,6 @@ class Root extends StatefulWidget {
 }
 
 class _RootState extends State<Root> {
-  final HomeController _c = Get.put(HomeController());
   int _index = 0;
   double _opacity = 0;
   bool _isShowGenre = false;
@@ -37,7 +35,8 @@ class _RootState extends State<Root> {
     final List<Widget> body = [
       Home(openGenre: _openGenre),
       const Search(),
-      const Profile()
+      const Profile(),
+      const SizedBox()
     ];
 
     return Scaffold(
@@ -49,34 +48,28 @@ class _RootState extends State<Root> {
             children: [
               NavigationRail(
                 groupAlignment: 0.0,
-                minWidth: 80,
-                destinations: const [
-                  NavigationRailDestination(
-                    icon: Icon(Remix.home_2_line),
-                    label: Text("Home"),
+                minWidth: 72,
+                destinations: [
+                  _buildNavigationRailDestination(
+                    Remix.home_8_line,
+                    "Home",
                   ),
-                  NavigationRailDestination(
-                      icon: Icon(Remix.search_2_line), label: Text("Search")),
-                  NavigationRailDestination(
-                      icon: Icon(Remix.heart_2_line), label: Text("Favourite"))
+                  _buildNavigationRailDestination(
+                      Remix.search_2_fill, "Search"),
+                  _buildNavigationRailDestination(Remix.list_ordered, "Saved"),
+                  _buildNavigationRailDestination(
+                      Remix.settings_2_fill, "Settings")
                 ],
-                trailing: IconButton(
-                    onPressed: () {}, icon: const Icon(Remix.settings_2_line)),
-                leading: Container(
-                  padding: const EdgeInsets.all(2),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  child: Image.asset(
-                    'assets/images/user.png',
-                    width: 25,
-                  ),
-                ),
                 labelType: NavigationRailLabelType.none,
                 backgroundColor: Colors.black,
                 selectedLabelTextStyle: const TextStyle(fontSize: 10),
                 selectedIconTheme: const IconThemeData(color: Colors.white),
                 selectedIndex: _index,
+                useIndicator: true,
+                indicatorColor: Colors.blue.withOpacity(0.2),
+                indicatorShape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
                 onDestinationSelected: (index) {
                   setState(() {
                     _index = index;
@@ -86,6 +79,15 @@ class _RootState extends State<Root> {
               Expanded(child: body[_index]),
             ],
           )),
+    );
+  }
+
+  NavigationRailDestination _buildNavigationRailDestination(
+      IconData icon, String label) {
+    return NavigationRailDestination(
+      icon: Icon(icon),
+      selectedIcon: Icon(icon, color: Colors.blue),
+      label: Text(label),
     );
   }
 }

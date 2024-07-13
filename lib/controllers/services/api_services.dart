@@ -208,17 +208,13 @@ class ApiServices {
     }
   }
 
-  Future<List<SourceModel>> getSources(
-      {String? imdb, num? season, num? episode}) async {
+  Future<SourceModel> getSources(String episodeId, String mediaId) async {
     try {
-      String url = "$baseURL/link?imdb=$imdb";
-      if (season != null) url += "&season=$season&episode=$episode";
-
-      final response = await http.get(Uri.parse(url));
+      final response = await http.get(Uri.parse(
+          "$baseURL/movies/flixhq/watch?episodeId=$episodeId&mediaId=$mediaId"));
 
       if (response.statusCode == 200) {
-        List<dynamic> data = jsonDecode(response.body);
-        return data.map((e) => SourceModel.fromJson(e)).toList();
+        return SourceModel.fromJson(jsonDecode(response.body));
       } else {
         throw Exception('Maaf server sedang sibuk');
       }

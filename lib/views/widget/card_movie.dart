@@ -1,7 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import "package:flutter/material.dart";
 import 'package:get/get.dart';
-import 'package:netflix/constant.dart';
 import 'package:netflix/models/item_model.dart';
 
 class CardMovie extends StatelessWidget {
@@ -15,10 +14,18 @@ class CardMovie extends StatelessWidget {
       child: Builder(builder: (context) {
         bool hasFocus = Focus.of(context).hasFocus;
         return InkWell(
-          onTap: () => Get.toNamed('/detail', arguments: movie.id),
+          onTap: () => movie.type == "TV Series"
+              ? Get.toNamed("/tshow", arguments: movie.id)
+              : Get.toNamed('/detail', arguments: movie.id),
           child: Container(
+            width: hasFocus ? Get.width * 0.35 : Get.width * 0.18,
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(5),
+                image: DecorationImage(
+                    image: CachedNetworkImageProvider(
+                      "${movie.image}",
+                    ),
+                    fit: hasFocus ? BoxFit.fitWidth : BoxFit.contain),
                 border: hasFocus
                     ? Border.all(
                         color: Colors.white,
@@ -27,25 +34,24 @@ class CardMovie extends StatelessWidget {
                     : Border.all()),
             margin: EdgeInsets.only(right: noMargin != null ? 0 : 10),
             padding: const EdgeInsets.all(5),
-            child: CachedNetworkImage(
-              imageUrl: "${movie.image}",
-              width: hasFocus ? 140 : 120,
-              placeholder: (_, url) => AspectRatio(
-                aspectRatio: 0.71,
-                child: Container(
-                  width: hasFocus ? 140 : 120,
-                  color: bgColor,
-                ),
-              ),
-              errorWidget: (context, url, error) => Opacity(
-                opacity: 0.3,
-                child: Image.asset(
-                  'assets/images/placeholder.png',
-                  width: 120,
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
+            child: hasFocus
+                ? Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Row(
+                        children: [
+                          Text(
+                            movie.title ?? "N/A",
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          const SizedBox(
+                            width: 20,
+                          ),
+                        ],
+                      )
+                    ],
+                  )
+                : const SizedBox.shrink(),
           ),
         );
       }),

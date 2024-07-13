@@ -6,6 +6,7 @@ import 'package:netflix/constant.dart';
 import 'package:netflix/views/pages/detail.dart';
 import 'package:netflix/views/pages/player.dart';
 import 'package:netflix/views/pages/root.dart';
+import 'package:netflix/views/pages/series.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -34,6 +35,10 @@ class MyApp extends StatelessWidget {
             GetPage(
                 name: '/detail',
                 page: () => const Detail(),
+                transition: Transition.cupertino),
+            GetPage(
+                name: "/tshow",
+                page: () => const ShowScreen(),
                 transition: Transition.cupertino),
             GetPage(
                 name: '/player',

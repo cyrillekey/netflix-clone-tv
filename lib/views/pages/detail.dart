@@ -7,7 +7,7 @@ import 'package:netflix/constant.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:netflix/controllers/detail_controller.dart';
 
-import 'package:netflix/views/widget/episode_section.dart';
+import 'package:netflix/views/widget/episode_tile.dart';
 import 'package:netflix/views/widget/media_section.dart';
 
 import 'package:netflix/views/widget/movie_info.dart';
@@ -444,25 +444,6 @@ class _DetailState extends State<Detail> {
                                 const Tab(text: 'Recomendations'),
                               ],
                             ),
-                            SizedBox(
-                              width: double.infinity,
-                              height: 300,
-                              child: TabBarView(
-                                children: [
-                                  if (_c.item?.numberOfSeasons != null)
-                                    EpisodeSection(
-                                        data: _c.item!,
-                                        episodes: _c.episode
-                                            .where((element) =>
-                                                element.season == season)
-                                            .toList(),
-                                        play: _playMovie),
-                                  TrailerSection(data: _c.item!, play: _play),
-                                  MediaSection(data: _c.item!),
-                                  const SizedBox(),
-                                ],
-                              ),
-                            )
                           ],
                         ),
                       ),
