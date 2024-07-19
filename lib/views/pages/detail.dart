@@ -7,12 +7,8 @@ import 'package:netflix/constant.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:netflix/controllers/detail_controller.dart';
 
-import 'package:netflix/views/widget/episode_tile.dart';
-import 'package:netflix/views/widget/media_section.dart';
-
 import 'package:netflix/views/widget/movie_info.dart';
 import 'package:netflix/views/widget/movie_summary.dart';
-import 'package:netflix/views/widget/trailer_section.dart';
 import 'package:remixicon/remixicon.dart';
 
 class Detail extends StatefulWidget {

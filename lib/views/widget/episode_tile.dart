@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:netflix/controllers/services/api_services.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:video_thumbnail/video_thumbnail.dart';
 
 class EpisodeTile extends StatelessWidget {
   const EpisodeTile({
@@ -92,35 +95,52 @@ class EpisodeTile extends StatelessWidget {
                 highlightColor: Colors.grey.shade100,
                 enabled: true,
                 child: Column(children: [
-                  Container(
-                    height: 100,
-                    width: 220,
-                    alignment: Alignment.bottomRight,
-                    decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(10),
-                          topRight: Radius.circular(10)),
-                      image: DecorationImage(
-                          image: AssetImage("assets/images/placeholder.png"),
-                          fit: BoxFit.cover),
-                    ),
-                    child: Container(
-                      margin: const EdgeInsets.all(10),
-                      child: Text(
-                        "${index + 1}",
-                        style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 24,
-                            shadows: <Shadow>[
-                              Shadow(
-                                offset: Offset(0, 0),
-                                blurRadius: 10,
-                                color: Colors.black,
-                              ),
-                            ]),
-                      ),
-                    ),
-                  ),
+                  FutureBuilder(
+                      future: getVideoThumnail(
+                          snapshot.data?.sources?.lastOrNull?.url),
+                      builder: (context, imageSnapshot) {
+                        print("Data here${imageSnapshot.data}");
+                        return Container(
+                          height: 100,
+                          width: 220,
+                          alignment: Alignment.bottomRight,
+                          decoration: BoxDecoration(
+                            borderRadius: const BorderRadius.only(
+                                topLeft: Radius.circular(10),
+                                topRight: Radius.circular(10)),
+                            image: imageSnapshot.hasData == false
+                                ? const DecorationImage(
+                                    image: AssetImage(
+                                        "assets/images/placeholder.png"),
+                                    fit: BoxFit.cover)
+                                : imageSnapshot.data != null
+                                    ? DecorationImage(
+                                        image: FileImage(
+                                            File(imageSnapshot.data!)),
+                                        fit: BoxFit.cover)
+                                    : const DecorationImage(
+                                        image: AssetImage(
+                                            "assets/images/placeholder.png"),
+                                        fit: BoxFit.cover),
+                          ),
+                          child: Container(
+                            margin: const EdgeInsets.all(10),
+                            child: Text(
+                              "${index + 1}",
+                              style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 24,
+                                  shadows: <Shadow>[
+                                    Shadow(
+                                      offset: Offset(0, 0),
+                                      blurRadius: 10,
+                                      color: Colors.black,
+                                    ),
+                                  ]),
+                            ),
+                          ),
+                        );
+                      }),
                   Container(
                     margin: const EdgeInsets.only(left: 8, top: 4),
                     width: 200,
@@ -135,5 +155,15 @@ class EpisodeTile extends StatelessWidget {
                 ]),
               ));
         });
+  }
+
+  Future<String?> getVideoThumnail(videoUrl) async {
+    final fileName = await VideoThumbnail.thumbnailFile(
+      video:
+          "https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4",
+      imageFormat: ImageFormat.PNG,
+      quality: 100,
+    );
+    return fileName;
   }
 }

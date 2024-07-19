@@ -55,7 +55,7 @@ class _ShowScreenState extends State<ShowScreen> {
             children: [
               Container(
                 width: Get.width,
-                height: Get.height * 0.40 > 300 ? Get.height * 0.40 : 300,
+                height: Get.height * 0.50,
                 decoration: BoxDecoration(
                   image: DecorationImage(
                     image: CachedNetworkImageProvider(_c.item?.cover ?? ""),
@@ -84,46 +84,109 @@ class _ShowScreenState extends State<ShowScreen> {
               ),
               Container(
                 width: Get.width,
-                height: Get.height * 0.45,
+                height: Get.height * 0.50,
                 margin: const EdgeInsets.all(8),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Text(
-                      _c.item?.rating != null
-                          ? _c.item!.rating.toString().substring(0, 3)
-                          : "N/A",
+                      _c.item?.title ?? "N/A",
                       style: const TextStyle(
                           fontSize: 40,
                           fontWeight: FontWeight.w500,
                           color: Colors.white),
                     ),
-                    Text(
-                      _c.item!.title.toString(),
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 2,
-                      style: const TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.white),
+                    const SizedBox(
+                      height: 10,
                     ),
                     Row(
                       children: [
-                        CircularButtons(
-                          icon: Remix.play_fill,
-                          onTap: () {
-                            HapticFeedback.lightImpact();
-                            // GO TO PLAY
-                          },
+                        const Icon(
+                          Icons.star_rate_rounded,
+                          color: Colors.amber,
+                          size: 24,
                         ),
-                        CircularButtons(
-                          icon: Remix.add_fill,
-                          onTap: () {
-                            HapticFeedback.lightImpact();
-                            // TODO implement favourite
-                          },
+                        const SizedBox(
+                          width: 10,
                         ),
+                        Text(
+                          "${_c.item?.rating}/10",
+                          style: const TextStyle(fontSize: 18),
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        const Icon(
+                          Icons.circle,
+                          color: Colors.grey,
+                          size: 10,
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        Text(_c.item?.production ?? "",
+                            style: const TextStyle(fontSize: 18)),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        const Icon(
+                          Icons.circle,
+                          color: Colors.grey,
+                          size: 10,
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        Text(_c.item?.releaseDate ?? "",
+                            style: const TextStyle(fontSize: 18)),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        const Icon(
+                          Icons.circle,
+                          color: Colors.grey,
+                          size: 10,
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        Text(
+                          (_c.item?.genres ?? []).join(","),
+                          style: const TextStyle(fontSize: 18),
+                        )
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Row(
+                      children: [
+                        TextButton.icon(
+                          onPressed: () {},
+                          style: const ButtonStyle(
+                              backgroundColor:
+                                  WidgetStatePropertyAll<Color>(Colors.white)),
+                          label: const Text(
+                            "Watch Now",
+                            style: TextStyle(color: Colors.black),
+                          ),
+                          icon: const Icon(
+                            Remix.play_fill,
+                            color: Colors.black,
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 20,
+                        ),
+                        TextButton.icon(
+                          onPressed: () {},
+                          icon: const Icon(Remix.add_fill),
+                          label: const Text("My wishlist"),
+                        ),
+                        IconButton(
+                            onPressed: () {},
+                            icon: const Icon(Remix.share_2_fill))
                       ],
                     )
                   ],
@@ -181,9 +244,6 @@ class _ShowScreenState extends State<ShowScreen> {
                   itemCount: _c.item?.seasons?.length,
                   itemBuilder: (context, index) {
                     return InkWell(
-                      hoverColor: Colors.transparent,
-                      highlightColor: Colors.transparent,
-                      focusColor: Colors.transparent,
                       onTap: () {
                         HapticFeedback.lightImpact();
                         setState(() {
@@ -193,7 +253,7 @@ class _ShowScreenState extends State<ShowScreen> {
                       child: TextContainer(
                           "Season ${_c.item!.seasons![index]}",
                           const EdgeInsets.only(right: 8),
-                          index == selectedSeason
+                          index + 1 == selectedSeason
                               ? const Color(0xFF545551)
                               : const Color(0xFF14303B)),
                     );
