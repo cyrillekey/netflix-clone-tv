@@ -20,18 +20,21 @@ class SourceModel {
     this.subtitles,
   });
 
-  factory SourceModel.fromJson(Map<String, dynamic> json) => SourceModel(
-        headers:
-            json["headers"] == null ? null : Headers.fromJson(json["headers"]),
-        sources: json["sources"] == null
-            ? []
-            : List<Source>.from(
-                json["sources"]!.map((x) => Source.fromJson(x))),
-        subtitles: json["subtitles"] == null
-            ? []
-            : List<Subtitle>.from(
-                json["subtitles"]!.map((x) => Subtitle.fromJson(x))),
-      );
+  factory SourceModel.fromJson(Map<String, dynamic> json) {
+    List<Source> sortedSource = (json["sources"] == null
+        ? []
+        : List<Source>.from(json["sources"]!.map((x) => Source.fromJson(x))));
+
+    return SourceModel(
+      headers:
+          json["headers"] == null ? null : Headers.fromJson(json["headers"]),
+      sources: sortedSource,
+      subtitles: json["subtitles"] == null
+          ? []
+          : List<Subtitle>.from(
+              json["subtitles"]!.map((x) => Subtitle.fromJson(x))),
+    );
+  }
 
   Map<String, dynamic> toJson() => {
         "headers": headers?.toJson(),

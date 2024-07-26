@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/route_manager.dart';
 import 'package:netflix/constant.dart';
-import 'package:netflix/models/item_model.dart';
 
 class Player extends StatefulWidget {
   const Player({super.key});
@@ -83,7 +82,9 @@ class _PlayerState extends State<Player> {
 class PlayerArgument {
   final String url;
   final String? subtitle;
-  final ItemModel movie;
-  PlayerArgument(
-      {required this.url, required this.subtitle, required this.movie});
+
+  PlayerArgument({
+    required this.url,
+    required this.subtitle,
+  });
 }

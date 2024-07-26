@@ -5,8 +5,9 @@ import 'package:netflix/controllers/home_controller.dart';
 import 'package:netflix/views/widget/section_home.dart';
 
 class Home extends StatefulWidget {
-  const Home({super.key, required this.openGenre});
-  final Function() openGenre;
+  const Home({
+    super.key,
+  });
 
   @override
   State<Home> createState() => _HomeState();
@@ -14,7 +15,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   final HomeController _c = Get.put(HomeController());
-  double _scrollOffset = 0;
+
   int page = 1;
   final _scrollController = ScrollController();
   final _scrollControllerGenre = ScrollController();
@@ -23,37 +24,6 @@ class _HomeState extends State<Home> {
   void initState() {
     super.initState();
     _c.getData();
-    _scrollController.addListener(_onScroll);
-    _scrollControllerGenre.addListener(_onScrollGenre);
-  }
-
-  void _onScroll() {
-    setState(() {
-      if (_scrollController.offset <= 140) {
-        _scrollOffset = _scrollController.offset;
-      } else {
-        _scrollOffset = 140;
-      }
-    });
-  }
-
-  void _onScrollGenre() {
-    setState(() {
-      if (_scrollControllerGenre.offset <= 140) {
-        _scrollOffset = _scrollControllerGenre.offset;
-      } else {
-        _scrollOffset = 140;
-      }
-    });
-
-    if (_scrollControllerGenre.position.atEdge &&
-        _scrollControllerGenre.offset != 0) {
-      setState(() {
-        page++;
-      });
-
-      _c.getCategory(page);
-    }
   }
 
   @override

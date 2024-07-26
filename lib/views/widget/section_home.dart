@@ -20,11 +20,9 @@ class SectionHome extends StatelessWidget {
             children: [
               Padding(
                 padding: const EdgeInsets.only(left: 20),
-                child: Focus(
-                  child: Text(title,
-                      style: const TextStyle(
-                          fontSize: 20, fontWeight: FontWeight.bold)),
-                ),
+                child: Text(title,
+                    style: const TextStyle(
+                        fontSize: 20, fontWeight: FontWeight.bold)),
               ),
               const SizedBox(height: 15),
               SizedBox(

@@ -10,14 +10,14 @@ class CardMovie extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Focus(
-      child: Builder(builder: (context) {
-        bool hasFocus = Focus.of(context).hasFocus;
-        return InkWell(
-          onTap: () => movie.type == "TV Series"
-              ? Get.toNamed("/tshow", arguments: movie.id)
-              : Get.toNamed('/detail', arguments: movie.id),
-          child: Container(
+    return InkWell(
+      onTap: () => movie.type == "TV Series"
+          ? Get.toNamed("/tshow", arguments: movie.id)
+          : Get.toNamed('/detail', arguments: movie.id),
+      child: Focus(
+        child: Builder(builder: (context) {
+          bool hasFocus = Focus.of(context).hasFocus;
+          return Container(
             width: hasFocus ? Get.width * 0.35 : Get.width * 0.18,
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(5),
@@ -52,9 +52,9 @@ class CardMovie extends StatelessWidget {
                     ],
                   )
                 : const SizedBox.shrink(),
-          ),
-        );
-      }),
+          );
+        }),
+      ),
     );
   }
 }

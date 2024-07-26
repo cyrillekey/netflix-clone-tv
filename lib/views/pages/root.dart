@@ -14,26 +14,11 @@ class Root extends StatefulWidget {
 
 class _RootState extends State<Root> {
   int _index = 0;
-  double _opacity = 0;
-  bool _isShowGenre = false;
-
-  void _openGenre() async {
-    setState(() {
-      _isShowGenre = true;
-    });
-
-    for (int i = 0; i < 5; i++) {
-      await Future.delayed(const Duration(milliseconds: 25));
-      setState(() {
-        _opacity += 0.2;
-      });
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
     final List<Widget> body = [
-      Home(openGenre: _openGenre),
+      const Home(),
       const Search(),
       const Profile(),
       const SizedBox()
